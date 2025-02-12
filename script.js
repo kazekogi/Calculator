@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const decimalButton = document.getElementById("decimal");
     const equalsButton = document.getElementById("equals");
     const numberButtons = document.querySelectorAll(".number"); // Select all buttons with class 'number'
+    const display = document.getElementById("display"); // display screen
 
 
     // Adding event listeners
@@ -29,11 +30,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 });
+const MAX_DISPLAY_LENGTH = 10; // Maximum length of the display
 
-// Example function implementations
-function clearDisplay() {
-    console.log("Clear display");
-}
 
 function toggleSign() {
     console.log("Toggle sign");
@@ -59,6 +57,19 @@ function calculateResult() {
     console.log("Calculate result");
 }
 
-function appendNumber(number) {
-    console.log("Number clicked:", number);
+function appendNumber(number) { // function to append numbers to the display
+    const display = document.getElementById("display");
+
+    if (display.textContent.length < MAX_DISPLAY_LENGTH) { // ensure display length is within limit
+        if (display.textContent === "0") {
+            display.textContent = number; // replace 0 with the number clicked
+        } else {
+            display.textContent += number; // append the number clicked
+        }
+    }
+    
+}
+
+function clearDisplay() { // function to clear the display screen
+    display.textContent = "0"; // reset display to 0
 }
