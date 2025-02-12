@@ -69,7 +69,7 @@ function appendOperator(operator) {
     console.log("Operator:", operator);
 }
 
-function squareRoot(number) { // helper function to calculate square root
+function squareRoot(number) { // helper function to calculate square root using binary search 
     let start = 0, end = number, mid, ans;
 
     while (start <= end) {
@@ -124,8 +124,18 @@ function calculateSquareRoot() { // function to calculate square root
     display.textContent = resultString; // update display with result
 }
 
-function appendDecimal() {
-    console.log("Append decimal");
+function appendDecimal() { // function to add a demical point
+    let currentValue = display.textContent;
+
+    if (currentValue.includes('.')) {
+        return; // do nothing if decimal point already exists
+    }
+
+    if (currentValue === '0') {
+        display.textContent = '0.'; // add decimal point to 0
+    } else {
+        display.textContent += '.'; // append decimal point
+    }
 }
 
 function calculateResult() {
