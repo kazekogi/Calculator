@@ -69,17 +69,44 @@ function appendOperator(operator) {
     console.log("Operator:", operator);
 }
 
-function squareroot(number) { // function to calculate square root that runs in O(log n) time using binary search
-    var lo = 0, hi = number;
-    while(lo <= hi) {
-         var mid = Math.floor((lo + hi) / 2);
-         if(mid * mid > number) hi = mid - 1;
-         else lo = mid + 1;
+function squareRoot(number) { // helper function to calculate square root
+    let start = 0, end = number, mid, ans;
+
+    while (start <= end) {
+        // Find mid
+        mid = Math.floor((start + end) / 2);
+        // If number is perfect square then break
+        if (mid * mid == number) {
+            ans = mid;
+            break;
+        }
+        // Increment start if integral part lies on right side of the mid
+        if (mid * mid < number) {
+            // First start value should be added to answer
+            ans = start;
+            // Then start should be changed
+            start = mid + 1;
+        }
+        // Decrement end if integral part lies on the left side of the mid
+        else {
+            end = mid - 1;
+        }
     }
-    return hi;
+    // To find the fractional part of square root upto 6 decimal
+    let increment = 0.1;
+
+    for (let i = 0; i < 6; i++) {
+        while (ans * ans <= number) {
+            ans += increment;
+        }
+        // Loop terminates, when ans * ans > number
+        ans = ans - increment;
+        increment = increment / 10;
+    }
+    return ans;
 }
 
-function calculateSquareRoot() {
+function calculateSquareRoot() { // function to calculate square root
     let currentValue = display.textContent;
     let number = parseFloat(currentValue); // convert string to number
 
@@ -87,12 +114,13 @@ function calculateSquareRoot() {
         return; // do nothing if display is 0 or empty
     }
 
-    
-
-    let result = Math.sqrt(number); // calculate square root
+    let result = squareRoot(number); // calculate square root
     let resultString = result.toString(); // convert result to string
 
-    
+    if (resultString.length > MAX_DISPLAY_LENGTH) { // if result exceeds max length
+        resultString = resultString.slice(0, MAX_DISPLAY_LENGTH); // truncate to max length
+    }
+
     display.textContent = resultString; // update display with result
 }
 
@@ -112,7 +140,6 @@ function appendNumber(number) { // function to append numbers to the display
             display.textContent += number; // append the number clicked
         }
     }
-    
 }
 
 function clearDisplay() { // function to clear the display screen
