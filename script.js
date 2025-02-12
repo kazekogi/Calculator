@@ -14,9 +14,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     // Adding event listeners
-    clearButton.addEventListener("click", clearDisplay);
-    signButton.addEventListener("click", toggleSign);
-    percentButton.addEventListener("click", percent);
+    clearButton.addEventListener("click", clearDisplay); // clear display button
+    signButton.addEventListener("click", toggleSign); // toggle sign button
+    percentButton.addEventListener("click", percent); // percent button
     divideButton.addEventListener("click", () => appendOperator('/'));
     multiplyButton.addEventListener("click", () => appendOperator('*'));
     additionButton.addEventListener("click", () => appendOperator('+'));
@@ -30,11 +30,24 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 });
+
 const MAX_DISPLAY_LENGTH = 10; // Maximum length of the display
 
 
 function toggleSign() {
-    console.log("Toggle sign");
+    const display = document.getElementById("display");
+
+    let currentValue = display.textContent; // get value from display
+
+    if (display.textContent !== "0") {
+        if (currentValue.startsWith("-")) {
+            // display.textContent = currentValue.substring(1); // Remove the negative sign
+        } else {
+            display.textContent = "-" + currentValue;
+        }
+
+    }
+
 }
 
 function percent() {
