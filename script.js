@@ -31,23 +31,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
-const MAX_DISPLAY_LENGTH = 10; // Maximum length of the display
+const MAX_DISPLAY_LENGTH = 10; // MAXIMUM ALLOWED LENGTH ON DISPLAY
+const display = document.getElementById("display"); // display screen
 
+function toggleSign(event) { // function to toggle the sign of the number on display
+    let currentValue = display.textContent;
 
-function toggleSign() {
-    const display = document.getElementById("display");
-
-    let currentValue = display.textContent; // get value from display
-
-    if (display.textContent !== "0") {
-        if (currentValue.startsWith("-")) {
-            // display.textContent = currentValue.substring(1); // Remove the negative sign
-        } else {
-            display.textContent = "-" + currentValue;
-        }
-
+    if (currentValue === '0' || currentValue === '') {
+        return; // do nothing if display is 0 or empty
     }
 
+    if (currentValue.charAt(0) === '-') { // if leading character is a negative sign
+        display.textContent = currentValue.slice(1); // remove the negative sign
+    } else { // else if leading character is not a negative sign
+        display.textContent = '-' + currentValue; // add a negative sign
+    }
 }
 
 function percent() {
@@ -71,7 +69,7 @@ function calculateResult() {
 }
 
 function appendNumber(number) { // function to append numbers to the display
-    const display = document.getElementById("display");
+    
 
     if (display.textContent.length < MAX_DISPLAY_LENGTH) { // ensure display length is within limit
         if (display.textContent === "0") {
