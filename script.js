@@ -57,22 +57,43 @@ function percent() { // function to calculate percentage
     }   
 
     let result = number / 100; // calculate percentage
-    
     let resultString = result.toString(); // convert result to string
+
     if (resultString.length > MAX_DISPLAY_LENGTH) { // if result exceeds max length
         resultString = resultString.slice(0, MAX_DISPLAY_LENGTH); // truncate to max length
     }
-
-    display.textContent = resultString; // update display with result
-    
+    display.textContent = resultString; // update display with result  
 }
 
 function appendOperator(operator) {
     console.log("Operator:", operator);
 }
 
+function squareroot(number) { // function to calculate square root that runs in O(log n) time using binary search
+    var lo = 0, hi = number;
+    while(lo <= hi) {
+         var mid = Math.floor((lo + hi) / 2);
+         if(mid * mid > number) hi = mid - 1;
+         else lo = mid + 1;
+    }
+    return hi;
+}
+
 function calculateSquareRoot() {
-    console.log("Square root");
+    let currentValue = display.textContent;
+    let number = parseFloat(currentValue); // convert string to number
+
+    if (currentValue === '0' || currentValue === '') {
+        return; // do nothing if display is 0 or empty
+    }
+
+    
+
+    let result = Math.sqrt(number); // calculate square root
+    let resultString = result.toString(); // convert result to string
+
+    
+    display.textContent = resultString; // update display with result
 }
 
 function appendDecimal() {
