@@ -48,8 +48,23 @@ function toggleSign(event) { // function to toggle the sign of the number on dis
     }
 }
 
-function percent() {
-    console.log("Percent");
+function percent() { // function to calculate percentage
+    let currentValue = display.textContent;
+    let number = parseFloat(currentValue); // convert string to number
+
+    if (currentValue === '0' || currentValue === '') {
+        return; // do nothing if display is 0 or empty
+    }   
+
+    let result = number / 100; // calculate percentage
+    
+    let resultString = result.toString(); // convert result to string
+    if (resultString.length > MAX_DISPLAY_LENGTH) { // if result exceeds max length
+        resultString = resultString.slice(0, MAX_DISPLAY_LENGTH); // truncate to max length
+    }
+
+    display.textContent = resultString; // update display with result
+    
 }
 
 function appendOperator(operator) {
@@ -69,8 +84,6 @@ function calculateResult() {
 }
 
 function appendNumber(number) { // function to append numbers to the display
-    
-
     if (display.textContent.length < MAX_DISPLAY_LENGTH) { // ensure display length is within limit
         if (display.textContent === "0") {
             display.textContent = number; // replace 0 with the number clicked
