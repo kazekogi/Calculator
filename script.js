@@ -1,5 +1,5 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const clearButton = document.getElementById("clearDisplay");
+document.addEventListener("DOMContentLoaded", () => { 
+    const clearButton = document.getElementById("clearDisplay"); // Select the buttons by ID's
     const signButton = document.getElementById("toggleSign");
     const percentButton = document.getElementById("percent");
     const divideButton = document.getElementById("divide");
@@ -10,22 +10,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const decimalButton = document.getElementById("decimal");
     const equalsButton = document.getElementById("equals");
     const numberButtons = document.querySelectorAll(".number"); // Select all buttons with class 'number'
-    const display = document.getElementById("display"); // display screen
-
+    const display = document.getElementById("display"); 
 
     // Adding event listeners
-    clearButton.addEventListener("click", clearDisplay); // clear display button
-    signButton.addEventListener("click", toggleSign); // toggle sign button
-    percentButton.addEventListener("click", percent); // percent button
-    divideButton.addEventListener("click", () => appendOperator('/'));
-    multiplyButton.addEventListener("click", () => appendOperator('*'));
-    additionButton.addEventListener("click", () => appendOperator('+'));
-    subtractButton.addEventListener("click", () => appendOperator('-'));
+    clearButton.addEventListener("click", clearDisplay); 
+    signButton.addEventListener("click", toggleSign); 
+    percentButton.addEventListener("click", percent); 
+    divideButton.addEventListener("click", () => setOperation('/'));
+    multiplyButton.addEventListener("click", () => setOperation('*'));
+    additionButton.addEventListener("click", () => setOperation('+'));
+    subtractButton.addEventListener("click", () => setOperation('-'));
     squarerootButton.addEventListener("click", calculateSquareRoot);
     decimalButton.addEventListener("click", appendDecimal);
-    equalsButton.addEventListener("click", calculateResult);
+    equalsButton.addEventListener("click", evaluate);
 
-    numberButtons.forEach(button => {
+    numberButtons.forEach(button => { // Add event listener to each number button
         button.addEventListener("click", () => appendNumber(button.textContent));
     });
 
@@ -33,6 +32,75 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const MAX_DISPLAY_LENGTH = 10; // MAXIMUM ALLOWED LENGTH ON DISPLAY
 const display = document.getElementById("display"); // display screen
+
+let firstNumber = "";
+let secondNumber = "";
+let currentOperator = null;
+let shouldResetDisplay = false;
+
+
+function appendNumber(number) { // function to append number to display
+    if (shouldResetDisplay) { // user just clicked an operator
+        display.textContent = number; // replace the display with the number
+        shouldResetDisplay = false; // reset the flag back to false 
+    } else {
+        if (display.textContent === '0' || display.textContent === 'Error') { // if display is 0 or error
+            display.textContent = number; // replace the display with the number
+        } else if (display.textContent.length < MAX_DISPLAY_LENGTH) { // if display length is less than max length
+            display.textContent += number; // append the number to the display
+        }
+    }
+}
+
+function setOperation(operator) { // function to set the operation
+    if (currentOperator !== null) {
+        evaluate(); // If an operation is already set, calculate first
+    }
+
+    firstNumber = display.textContent; // Store the first number
+    currentOperator = operator; // Store the operator
+    shouldResetDisplay = true; // Set the flag to true
+}
+
+function evaluate() { // function to evaluate the expression
+    if (currentOperator === null || shouldResetDisplay) return; // If no operator is set or display needs to be reset, do nothing
+
+    secondNumber = display.textContent; // Store the second number
+
+    const num1 = parseFloat(firstNumber); // convert the 2 numbers from str to float
+    const num2 = parseFloat(secondNumber);
+    let result = 0; // initialize result
+
+    switch (currentOperator) { // Perform the operation based on the operator
+        case "+":
+            result = num1 + num2;
+            break;
+        case "-":
+            result = num1 - num2;
+            break;
+        case "*":
+            result = num1 * num2;
+            break;
+        case "/":
+            if (num2 === 0) { // if denominator is 0
+                result = "Error"; // set result to error
+            } else {
+                result = num1 / num2; // perform division
+            }
+            break;
+    }
+    let resultString = result.toString(); // convert result to string
+
+    if (resultString.length > MAX_DISPLAY_LENGTH) { // if result exceeds max length
+        resultString = resultString.slice(0, MAX_DISPLAY_LENGTH); // truncate to max length
+    }
+    display.textContent = resultString; // update display with result
+
+    firstNumber = result; // store result for further operations
+    secondNumber = ""; // reset second number
+    currentOperator = null; // reset operator
+    shouldResetDisplay = true; // reset flag to true
+}
 
 function toggleSign(event) { // function to toggle the sign of the number on display
     let currentValue = display.textContent;
@@ -63,10 +131,6 @@ function percent() { // function to calculate percentage
         resultString = resultString.slice(0, MAX_DISPLAY_LENGTH); // truncate to max length
     }
     display.textContent = resultString; // update display with result  
-}
-
-function appendOperator(operator) {
-    console.log("Operator:", operator);
 }
 
 function squareRoot(number) { // helper function to calculate square root using binary search 
@@ -114,7 +178,12 @@ function calculateSquareRoot() { // function to calculate square root
         return; // do nothing if display is 0 or empty
     }
 
+    const startTime = performance.now(); // performance measurement start
+
     let result = squareRoot(number); // calculate square root
+
+    const endTime = performance.now(); // performance measurement end
+
     let resultString = result.toString(); // convert result to string
 
     if (resultString.length > MAX_DISPLAY_LENGTH) { // if result exceeds max length
@@ -122,6 +191,9 @@ function calculateSquareRoot() { // function to calculate square root
     }
 
     display.textContent = resultString; // update display with result
+
+    const executionTime = endTime - startTime;
+    console.log(`Execution time: ${executionTime} milliseconds`);
 }
 
 function appendDecimal() { // function to add a demical point
@@ -135,20 +207,6 @@ function appendDecimal() { // function to add a demical point
         display.textContent = '0.'; // add decimal point to 0
     } else {
         display.textContent += '.'; // append decimal point
-    }
-}
-
-function calculateResult() {
-    console.log("Calculate result");
-}
-
-function appendNumber(number) { // function to append numbers to the display
-    if (display.textContent.length < MAX_DISPLAY_LENGTH) { // ensure display length is within limit
-        if (display.textContent === "0") {
-            display.textContent = number; // replace 0 with the number clicked
-        } else {
-            display.textContent += number; // append the number clicked
-        }
     }
 }
 
